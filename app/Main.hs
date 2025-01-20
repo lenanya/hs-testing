@@ -19,12 +19,11 @@ strxtimes s n
         putStrLn s
         strxtimes s (n - 1)
 
-printeach :: [Int] -> Int -> IO () 
-printeach x n 
-    | n >= length x = return ()
-    | otherwise = do  
-        print (x !! n)
-        printeach x ( n+1)
+printeach :: [Int] -> IO () 
+printeach [] = return ()
+printeach (x:xs) = do
+    print x
+    printeach xs
 
 dupfirst :: [Int] -> [Int]
 dupfirst [] = []
@@ -48,6 +47,20 @@ addlist [] = 0
 addlist [x] = x
 addlist (x:xs) = addlist ((x + head xs):remfirst xs)
 
+addorsub :: (a -> b -> b) -> a -> b -> b
+addorsub f = f
+
+revsumlist :: [Int] -> Int
+revsumlist [] = 0 
+revsumlist (x:xs) = foldl (-) x xs
+
+addthensub :: Int -> Int -> Int -> (Int -> Int -> Int) -> Int
+addthensub n a b f 
+    | n == 0 = a
+    | odd n = addthensub (n-1) (addorsub f b a) (addorsub f a a) (-)
+    | even n = addthensub (n-1) (addorsub f a b) (addorsub f b a) (+) 
+    | otherwise = 0
+
 main :: IO ()
 main = do
     --input <- getLine  
@@ -62,4 +75,10 @@ main = do
     --print (remfirst [1..10])
     --print (movetoend [1..10])
     --print (shift 5 (evennums [0..20]))
-    print (addlist [1..30])
+    --print (addlist [1..30])
+    --print (addorsub (+) 1 2)
+    --print (addorsub (-) 2 1) 
+    --print (revsumlist [100, 1, 2, 3, 4])
+    --print (addthensub 200 3 2 (+))
+
+    printeach [0..10]
